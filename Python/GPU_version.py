@@ -25,7 +25,7 @@ gdal.AllRegister()
 try:
     ds = gdal.Open('40x40.tif')
 except RuntimeError:
-    sys.exit("Błąd podczas otwierania pliku wejściowego")
+    sys.exit("Error opening the file")
 
 band = ds.GetRasterBand(1)
 dem = band.ReadAsArray()
@@ -33,7 +33,7 @@ rows = ds.RasterYSize
 cols = ds.RasterXSize
 print("nRows: ", rows)
 print("nCols: ", cols)
-print("Rozmiar tablicy: ", rows*cols)
+print("Size of array: ", rows*cols)
 
 driver = gdal.GetDriverByName('GTiff')
 dataset = driver.Create('slopePy.tif',cols, rows, 1,gdal.GDT_Float32)
@@ -64,5 +64,5 @@ ds.FlushCache()
 outds = None
 ds = None
 
-print("Czas wykonywania: ",end - start, " [s]")
+print("Execution time: ",end - start, " [s]")
 
