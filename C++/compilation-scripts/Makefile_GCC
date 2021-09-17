@@ -1,0 +1,7 @@
+CXX = g++ 
+FILES = wersjaSekw.cpp
+PROG = slope_sekw
+LIB = -lgdal
+FLAGS = -I /storage/opt/gdal-3.0.4/include/ -L /storage/opt/gdal-3.0.4/lib/ -std=c++11 -mcmodel=medium -O3
+all:
+	$(CXX) -o $(PROG) $(FILES) $(LIB) $(FLAGS)

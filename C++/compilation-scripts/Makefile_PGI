@@ -1,0 +1,10 @@
+CXX = pgc++
+FILES = wersja_CPU_GPU.cpp
+PROG = slope_par
+LIB = -lgdal -acc
+FLAGS = -I /storage/opt/gdal-3.0.4/include/ -L /storage/opt/gdal-3.0.4/lib/ -std=c++11 -mcmodel=medium -O3 -ta=tesla:cc70  -tp=haswell
+all:
+	$(CXX) -o $(PROG) $(FILES) $(LIB) $(FLAGS)
+# tesla:cc70 	VOLTA
+# tesla:cc35 	KEPLER
+# multicore     Wielowatkowy
