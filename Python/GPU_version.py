@@ -23,7 +23,7 @@ gdal.AllRegister()
 
 
 try:
-    ds = gdal.Open('40x40.tif')
+    ds = gdal.Open('file.tif')
 except RuntimeError:
     sys.exit("Error opening the file")
 
