@@ -20,10 +20,9 @@ int main()
 	GDALAllRegister();
 	CPLPushErrorHandler(CPLQuietErrorHandler);
 
-	pszFile = "./40x40.tif"; 
+	pszFile = "./file.tif"; 
 
-	//ODCZYT
-
+	// Read
 	GDALDataset *dem = (GDALDataset *)GDALOpen(pszFile, GA_ReadOnly);
 	double geoTransform[6];
 	dem->GetGeoTransform(geoTransform);
@@ -34,8 +33,7 @@ int main()
 
 	cout << "nCols: " << nCols << " nRows: " << nRows << "\n";
 
-	//ZAPIS
-
+	// Save
 	GDALDataset *geotiffDataset;
 	GDALDriver *driverGeotiff;
 	driverGeotiff = GetGDALDriverManager()->GetDriverByName("GTiff");
@@ -47,27 +45,22 @@ int main()
 	float *slope = (float *)CPLMalloc(sizeof(float) * ((nCols) * (nRows)));
 
 	unsigned long long n = (nCols * nRows);
-	cout << "Rozmiar tablicy: " << n << endl; 
+	cout << "Size of array: " << n << endl; 
 
-	int odczyt, zapis; 
+	int read, save; 
 
-	odczyt = rasterBand->RasterIO(GF_Read, 0, 0, nCols, nRows, tab, nCols, nRows, GDT_Float32, 0, 0);
+	read = rasterBand->RasterIO(GF_Read, 0, 0, nCols, nRows, tab, nCols, nRows, GDT_Float32, 0, 0);
 
 	begin = clock();
-
 	for (r = 1; r < nRows - 1; r++)
 	{
-
 		for (c = 1; c < nCols - 1; c++)
 		{
-
 			p = ((tab[(r - 1) * nCols + (c + 1)] + 2 * tab[r * nCols + (c + 1)] + tab[(r + 1) * nCols + (c + 1)]) -
-				 (tab[(r - 1) * nCols + (c - 1)] + 2 * tab[r * nCols + (c - 1)] + tab[(r + 1) * nCols + (c - 1)])) /
-				8;
+				 (tab[(r - 1) * nCols + (c - 1)] + 2 * tab[r * nCols + (c - 1)] + tab[(r + 1) * nCols + (c - 1)])) / 8;
 
 			q = ((tab[(r + 1) * nCols + (c - 1)] + 2 * tab[(r + 1) * nCols + c] + tab[(r + 1) * nCols + (c + 1)]) -
-				 (tab[(r - 1) * nCols + (c - 1)] + 2 * tab[(r - 1) * nCols + c] + tab[(r - 1) * nCols + (c + 1)])) /
-				8;
+				 (tab[(r - 1) * nCols + (c - 1)] + 2 * tab[(r - 1) * nCols + c] + tab[(r - 1) * nCols + (c + 1)])) / 8;
 
 			slope[r * nCols + c] = atan(sqrt((p * p) + (q * q)));
 		}
@@ -76,12 +69,11 @@ int main()
 	end = clock();
 	double elapsed = double(end - begin) / CLOCKS_PER_SEC;
 
-	cout << "Czas wykonywania: " << elapsed << " [s]";
-	zapis = geotiffDataset->GetRasterBand(1)->RasterIO(GF_Write, 1, 1, nCols - 1, nRows - 1, slope, nCols - 1, nRows - 1, GDT_Float32, 0, 0);
+	cout << "Execution time: " << elapsed << " [s]";
+	save = geotiffDataset->GetRasterBand(1)->RasterIO(GF_Write, 1, 1, nCols - 1, nRows - 1, slope, nCols - 1, nRows - 1, GDT_Float32, 0, 0);
 
-	cout << "\n"
-		 << "return zapisu: " << zapis;
-
+	cout << "\n" << "Return of save: " << save;
+	
 	CPLFree(tab);
 	CPLFree(slope);
 	GDALClose(dem);
