@@ -12,15 +12,13 @@ def Slope(rows, cols, dem, tab):
 
             tab[r][c] = np.arctan(np.sqrt(p*p+q*q))
 
-
-
 gdal.UseExceptions()
 gdal.AllRegister()
 
 try:
-    ds = gdal.Open('40x40.tif')
+    ds = gdal.Open('file.tif')
 except RuntimeError:
-    sys.exit("Błąd podczas otwierania pliku wejściowego")
+    sys.exit("Error opening the file")
 
 band = ds.GetRasterBand(1)
 dem = band.ReadAsArray()
@@ -28,7 +26,7 @@ rows = dem.shape[1]
 cols = dem.shape[0]
 print("nRows: ", rows)
 print("nCols: ", cols)
-print("Rozmiar tablicy: ", rows*cols)
+print("Size of array: ", rows*cols)
 
 driver = gdal.GetDriverByName('GTiff')
 dataset = driver.Create('slopePy.tif',rows-1, cols-1, 1,gdal.GDT_Float32)
@@ -55,5 +53,5 @@ outds = None
 ds = None
 
 
-print("Czas wykonywania: ",end - start, " [s]")
+print("Execution time: ",end - start, " [s]")
 
