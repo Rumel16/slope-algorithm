@@ -33,7 +33,7 @@ int main()
 
 	cout << "nCols: " << nCols << " nRows: " << nRows << "\n";
 
-	// Save
+	// Write
 	GDALDataset *geotiffDataset;
 	GDALDriver *driverGeotiff;
 	driverGeotiff = GetGDALDriverManager()->GetDriverByName("GTiff");
@@ -47,7 +47,7 @@ int main()
 	unsigned long long n = (nCols * nRows);
 	cout << "Size of array: " << n << endl; 
 
-	int read, save; 
+	int read, write; 
 
 	read = rasterBand->RasterIO(GF_Read, 0, 0, nCols, nRows, tab, nCols, nRows, GDT_Float32, 0, 0);
 
@@ -70,9 +70,9 @@ int main()
 	double elapsed = double(end - begin) / CLOCKS_PER_SEC;
 
 	cout << "Execution time: " << elapsed << " [s]";
-	save = geotiffDataset->GetRasterBand(1)->RasterIO(GF_Write, 1, 1, nCols - 1, nRows - 1, slope, nCols - 1, nRows - 1, GDT_Float32, 0, 0);
+	write = geotiffDataset->GetRasterBand(1)->RasterIO(GF_Write, 1, 1, nCols - 1, nRows - 1, slope, nCols - 1, nRows - 1, GDT_Float32, 0, 0);
 
-	cout << "\n" << "Return of save: " << save;
+	cout << "\n" << "Write error: " << write;
 	
 	CPLFree(tab);
 	CPLFree(slope);
